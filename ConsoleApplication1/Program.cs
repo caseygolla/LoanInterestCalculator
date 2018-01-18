@@ -32,13 +32,13 @@ namespace ConsoleApplication1
             //Loan a = new Loan(principle, interestRate, length);
 
             #endregion
-            Loan a = new Loan();
+            Loan loan1 = new Loan();
 
-            Console.WriteLine("Monthly Payment: " + a.displayMonthlyPayment());
-            Console.WriteLine("Total to be repaid: " + a.displayTotalRepayment());
+            Console.WriteLine("Monthly Payment: " + loan1.displayMonthlyPayment());
+            Console.WriteLine("Total to be repaid: " + loan1.displayTotalRepayment());
 
-            a.calculateAmmoritazation();
-            a.printAmortization();
+            loan1.calculateAmmoritazation();
+            loan1.printAmortization();
 
         }
     }

@@ -10,54 +10,59 @@ namespace LoanInterestCalculator
     {
         private double principleAmount;
         private double interestRate;
-        private double lengthOfRepayment;
+        private double lengthOfRepaymentInYears;
+        private int periodicPayments;
+        private double totalInterest = 0;
         private const int compoundFrequency = 365;
         private const int one = 1;
-        private const int periodicPayments = 12;
         private List<AmortizationItem> amortizationList;
 
         public Loan()
         {
             principleAmount = 1000;
             interestRate = .06;
-            lengthOfRepayment = .5;
+            lengthOfRepaymentInYears = .5;
+            periodicPayments = 12;
             amortizationList = new List<AmortizationItem>();
         }
 
-        public Loan(double principle, double rate, double length)
+        public Loan(double principle, double rate, double length = 1, int periodicPayments = 12)
         {
             principleAmount = principle;
             interestRate = rate;
-            lengthOfRepayment = length;
+            lengthOfRepaymentInYears = length;
+            this.periodicPayments = periodicPayments;
         }
 
         public double PrincipleAmount { get { return principleAmount; } set { principleAmount = value; } }
         public double InterestRate { get { return interestRate; } set { interestRate = value; } }
-        public double LengthOfRepaymentInYears { get { return lengthOfRepayment; } set { lengthOfRepayment = value; } }
-
+        public double LengthOfRepaymentInYears { get { return lengthOfRepaymentInYears; } set { lengthOfRepaymentInYears = value; } }
+        public double TotalInterest {
+            get { return totalInterest; }
+            private set { totalInterest = value; }
+        }
         public List<AmortizationItem> AmortizationList
         {
             get { return amortizationList; }
             set { amortizationList = value; }
         }
 
-        private double calcPaymentOfInterest()
+        public double calcPaymentOfInterest()
         {
             double interestPayment = principleAmount * interestRate / periodicPayments;
             return Math.Round(interestPayment,2);
         }
 
-        private double calcTotalRepayment()
+        public double calcTotalRepayment()
         {
-            double total = principleAmount * Math.Pow(1 + (interestRate / 365), (365 * lengthOfRepayment));
-
+            double total = calcMonthlyPayment() * periodicPayments * lengthOfRepaymentInYears;
             return Math.Round(total, 2);
         }
 
-        private double calcMonthlyPayment()
+        public double calcMonthlyPayment()
         {
             double i = interestRate / periodicPayments;
-            double n = lengthOfRepayment * periodicPayments;
+            double n = lengthOfRepaymentInYears * periodicPayments;
             double discountFactor = (Math.Pow((one + i), n) - one) / (i * Math.Pow(one + i, n));
             double payment = principleAmount / discountFactor;
             return Math.Round(payment,2);
@@ -77,7 +82,6 @@ namespace LoanInterestCalculator
         {
             double interest;
             amortizationList = new List<AmortizationItem>();
-            double totalInterest = 0;
             double principlePaid = 0;
             double amount = calcTotalRepayment();
             double payment = calcMonthlyPayment();
@@ -85,7 +89,7 @@ namespace LoanInterestCalculator
             do
             {
                 interest = calcPaymentOfInterest();
-                totalInterest += Math.Round(interest, 7);
+                totalInterest += Math.Round(interest, 3);
                 if(payment >= principleAmount)
                 {
                     principleAmount -= interest;

@@ -12,21 +12,32 @@ namespace LoanInterestCalculator
         public static string FormatNumberToCurrency(double value)
         {
             value = Math.Round(value, 2);
-
             string valueStr = AddCurrencyCommas(value);
             valueStr = valueStr.Insert(0, "$");
 
             return valueStr;
         }
 
-        private static string AddCurrencyCommas(double value)
+        public static string AddCurrencyCommas(double value)
         {
-            string valueStr = value.ToString();
-
-
-
+            string valueStr = FormatToTwoDecimalPlaces(value);
+            int indexOfDecimal = valueStr.IndexOf('.');
+            if (indexOfDecimal > 3)
+            {
+                for (int position = 1; position < indexOfDecimal; position++)
+                {
+                    if(position % 3 == 0)
+                    {
+                        valueStr = valueStr.Insert((indexOfDecimal - position), ",");
+                    }
+                }
+            }
             return valueStr;
         }
 
+        public static string FormatToTwoDecimalPlaces(double value)
+        {
+            return value.ToString("0.00");
+        }
     }
 }

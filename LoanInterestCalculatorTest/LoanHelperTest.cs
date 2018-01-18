@@ -1,46 +1,42 @@
 ﻿using System;
 using NUnit.Framework;
 using LoanInterestCalculator;
+using System.Collections;
 
 namespace LoanInterestCalculatorTest
 {
     [TestFixture]
     public class LoanHelperTest
     {
-        [Test]
-        public void TestRoundingFormattingManyDecimalPlacesToTwoDecimals()
+        [TestCase(12312, "12,312.00")]
+        [TestCase(98, "98.00")]
+        [TestCase(3766192856, "3,766,192,856.00")]
+        [Category("Format_CurrencyCommas")]
+        public void TestAddCurrencyCommas_LargeNumbers(double input, string expected)
         {
 
+            string actual = LoanHelper.AddCurrencyCommas(input);
+
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [Test]
-        public void TestRoundingFormattingOneDecimalPlacesToTwoDecimals()
+        [TestCase(12312,"12312.00")]
+        [TestCase(98,"98.00")]
+        [TestCase(3766192856, "3766192856.00")]
+        [Category("Format_2DecimalPlaces")]
+        public void TestFormattingAllNumbersToHaveTwoDecimalPlaces(double input, string expected)
         {
-            Assert.Inconclusive();
+            string actual = LoanHelper.FormatToTwoDecimalPlaces(input);
+
+            Assert.That(actual, Is.EqualTo( expected ));
         }
+    }
 
-        [Test]
-        public void TestRoundingFormattingNoDecimalPlacesToTwoDecimals()
+    public class ExampleTestCaseSource : IEnumerable
+    {
+        public IEnumerator GetEnumerator()
         {
-            Assert.Inconclusive();
-        }
-
-        [Test]
-        public void TestAddCurrencyCommas_LargeNumbers()
-        {
-
-        }
-
-        [Test]
-        public void TestAddCurrencyCommas_DigitInThousands()
-        {
-
-        }
-
-        [Test]
-        public void TestAddCurrencyCommas_DigitsInHundreds()
-        {
-
+            throw new NotImplementedException();
         }
     }
 }
