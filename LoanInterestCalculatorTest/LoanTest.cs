@@ -57,7 +57,7 @@ namespace LoanInterestCalculatorTest
         [TestCase(13412, .08, 7, 84)]
         [TestCase(193748, .075, 15, 180)]
         [Category("Test_AmoritazationEntryCount")]
-        public void Test_AmmoritazationCreatesCorrectNumberOfEntries(double principle, double interestRate, double loanLengthInYears, double expected)
+        public void Test_Ammoritazation_CreatesCorrectNumberOfEntries(double principle, double interestRate, double loanLengthInYears, double expected)
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
 
@@ -70,7 +70,7 @@ namespace LoanInterestCalculatorTest
         [TestCase(13412, .08, 7, 4147.55)]
         [TestCase(193748, .075, 15, 129544.22)]
         [Category("Test_AmoritazationTotalInterest")]
-        public void Test_AmmoritazationHasCorrectInterestTotal(double principle, double interestRate, double loanLengthInYears, double expected)
+        public void Test_Ammoritazation_HasCorrectInterestTotal(double principle, double interestRate, double loanLengthInYears, double expected)
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
 

@@ -12,7 +12,7 @@ namespace LoanInterestCalculatorTest
         [TestCase(98, "98.00")]
         [TestCase(3766192856, "3,766,192,856.00")]
         [Category("Format_CurrencyCommas")]
-        public void TestAddCurrencyCommas_LargeNumbers(double input, string expected)
+        public void Test_AddCurrencyCommas_LargeNumbers(double input, string expected)
         {
 
             string actual = LoanHelper.AddCurrencyCommas(input);
@@ -24,7 +24,7 @@ namespace LoanInterestCalculatorTest
         [TestCase(98,"98.00")]
         [TestCase(3766192856, "3766192856.00")]
         [Category("Format_2DecimalPlaces")]
-        public void TestFormattingAllNumbersToHaveTwoDecimalPlaces(double input, string expected)
+        public void Test_Formatting_AllNumbersToHaveTwoDecimalPlaces(double input, string expected)
         {
             string actual = LoanHelper.FormatToTwoDecimalPlaces(input);
 
