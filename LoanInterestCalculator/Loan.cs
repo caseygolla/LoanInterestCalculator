@@ -19,9 +19,9 @@ namespace LoanInterestCalculator
 
         public Loan()
         {
-            principleAmount = 1000;
+            principleAmount = 5000;
             interestRate = .06;
-            lengthOfRepaymentInYears = .5;
+            lengthOfRepaymentInYears = 5;
             periodicPayments = 12;
             amortizationList = new List<AmortizationItem>();
         }
@@ -89,7 +89,7 @@ namespace LoanInterestCalculator
             do
             {
                 interest = calcPaymentOfInterest();
-                totalInterest += Math.Round(interest, 3);
+                totalInterest += Math.Round(interest, 2);
                 if(payment >= principleAmount)
                 {
                     principleAmount -= interest;

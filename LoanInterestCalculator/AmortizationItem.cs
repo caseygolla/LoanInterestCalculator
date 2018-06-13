@@ -32,6 +32,7 @@ namespace LoanInterestCalculator
         {
             Console.WriteLine("Payment " + paymentCycle);
             Console.WriteLine("\tPrinciple Paid: " + LoanHelper.FormatNumberToCurrency(principlePaid) + 
+                                " | Interest: " + LoanHelper.FormatNumberToCurrency(interestPaid) +
                                 " | Total Interest: " + LoanHelper.FormatNumberToCurrency(totalInterest) +
                                 " | Amount Remaining: " + LoanHelper.FormatNumberToCurrency(remainingBalance));
 
