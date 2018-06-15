@@ -38,7 +38,8 @@ namespace ConsoleApplication1
             Console.WriteLine("Total to be repaid: " + loan1.displayTotalRepayment());
 
             loan1.calculateAmmoritazation();
-            loan1.printAmortization();
+            loan1.PrintAmmortizationToConsole();
+            loan1.SaveAmmortizationToFile();
 
         }
     }

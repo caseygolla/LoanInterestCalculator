@@ -16,7 +16,7 @@ namespace LoanInterestCalculatorTest
         [Category("Test_InterestPayment")]
         public void Test_PaymentOfInterestCalculation(double principle, double interestRate, int periodicPayments, double expected)
         {
-            Loan newLoan = new Loan(principle, interestRate, 1, periodicPayments);
+            Loan newLoan = new Loan(principle, interestRate, DateTime.Today.Date, 1, periodicPayments);
 
             double interestPayment = newLoan.calcPaymentOfInterest();
 
@@ -31,7 +31,7 @@ namespace LoanInterestCalculatorTest
         [Category("Test_TotalRepayment")]
         public void Test_TotalRepaymentCalculation(double principle, double interestRate, double loanLength, double expected)
         {
-            Loan newLoan = new Loan(principle, interestRate, loanLength);
+            Loan newLoan = new Loan(principle, interestRate, DateTime.Today.Date, loanLength);
 
             double totalRepayment = newLoan.calcTotalRepayment();
 
@@ -46,7 +46,7 @@ namespace LoanInterestCalculatorTest
         [Category("Test_MonthlyPayment")]
         public void Test_MonthlyPaymentCalculation(double principle, double interestRate, double loanLengthInYears, double expected)
         {
-            Loan loan = new Loan(principle,interestRate, loanLengthInYears);
+            Loan loan = new Loan(principle,interestRate, DateTime.Today.Date, loanLengthInYears);
 
             double actual = loan.calcMonthlyPayment();
 
@@ -59,7 +59,7 @@ namespace LoanInterestCalculatorTest
         [Category("Test_AmoritazationEntryCount")]
         public void Test_Ammoritazation_CreatesCorrectNumberOfEntries(double principle, double interestRate, double loanLengthInYears, double expected)
         {
-            Loan loan = new Loan(principle, interestRate, loanLengthInYears);
+            Loan loan = new Loan(principle, interestRate, DateTime.Today.Date, loanLengthInYears);
 
             loan.calculateAmmoritazation();
 
@@ -72,7 +72,7 @@ namespace LoanInterestCalculatorTest
         [Category("Test_AmoritazationTotalInterest")]
         public void Test_Ammoritazation_HasCorrectInterestTotal(double principle, double interestRate, double loanLengthInYears, double expected)
         {
-            Loan loan = new Loan(principle, interestRate, loanLengthInYears);
+            Loan loan = new Loan(principle, interestRate, DateTime.Today.Date, loanLengthInYears);
 
             loan.calculateAmmoritazation();
             double calculatedTotalInterest = loan.TotalInterest;

@@ -45,8 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AmortizationItem.cs" />
+    <Compile Include="FileLoanOutput.cs" />
+    <Compile Include="IOutput.cs" />
     <Compile Include="Loan.cs" />
     <Compile Include="LoanHelper.cs" />
+    <Compile Include="PrintLoanOutput.cs" />
+    <Compile Include="MonthlyPymt.cs" />
+    <Compile Include="OneTimePymt.cs" />
+    <Compile Include="IPayment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
