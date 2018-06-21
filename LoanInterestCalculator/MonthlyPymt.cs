@@ -20,5 +20,10 @@ namespace LoanInterestCalculator
                 throw new NotImplementedException();
             }
         }
+
+        public double calculateNewLoanPayment(Loan loan)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

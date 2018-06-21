@@ -9,5 +9,7 @@ namespace LoanInterestCalculator
     interface IPayment
     {
         double PaymentAmount { get; set; }
+
+        double calculateNewLoanPayment(Loan loan);
     }
 }

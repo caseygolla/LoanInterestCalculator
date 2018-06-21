@@ -25,7 +25,7 @@ namespace LoanInterestCalculator
             interestRate = .06;
             lengthOfRepaymentInYears = 5;
             periodicPayments = 12;
-            ammortizationList = new List<AmortizationItem>():
+            ammortizationList = new List<AmortizationItem>();
             loanStart = DateTime.Today;
         }
 
@@ -139,6 +139,26 @@ namespace LoanInterestCalculator
         {
             output = new FileLoanOutput();
             output.PrintAmmortization(ammortizationList);
+        }
+
+        public void AdditionalPayment()
+        {
+            throw new NotImplementedException(); 
+            //IPayment payment;
+            //IPayment additionalPayment;
+            //if (oneTimePymtChk.isTrue)
+            //{
+            //    payment = new OneTimePymt();
+            //}
+            //else if (payment == null && additionalPymtChk.IsTrue)
+            //{
+            //    payment = new MonthlyPymt();
+            //}
+            //else if(payment != null && additionalPayment.IsTrue)
+            //{
+            //    additionalPayment = new MonthlyPymt();
+            //}
+
         }
     }
 }

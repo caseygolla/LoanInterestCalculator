@@ -7,39 +7,49 @@ using System.IO;
 
 namespace LoanInterestCalculator
 {
-    class FileLoanOutput : IOutput
+    public class FileLoanOutput : IOutput
     {
         private string payments = "";
+        string directoryPath = @"C:\LoanProgram";
+        string fileName = @"\LoanAmmortization.txt";
+
+        public string DirectoryPath { get { return directoryPath; } }
+
+        public string FileName { get { return fileName; } }
 
         public void PrintAmmortization(List<AmortizationItem> ammortList)
         {
-            string directoryPath = @"C:\LoanProgram";
-            string fileName = @"\LoanAmmortization.txt";
 
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
+            CreateDirectoryForOutputFile(directoryPath);
 
             foreach (AmortizationItem item in ammortList)
             {
-                ConsoleOutput(item);
+                CreateFileOutputStringOfPayments(item);
             }
 
             File.WriteAllText(directoryPath + fileName, payments);
         }
 
-        private void ConsoleOutput(AmortizationItem item)
+        public void CreateFileOutputStringOfPayments(AmortizationItem item)
         {
             try
             {
                 payments += String.Format("Payment {0} on {1} - Principle Paid: {2} | " +
-                    "Interest: {3} | Total Interest: {4} | Amount Remaining: {5}" + Environment.NewLine, 
-                    item.AmmortIndex, item.PaymentDate(), item.PrinciplePaidString(), 
+                    "Interest: {3} | Total Interest: {4} | Amount Remaining: {5}" + Environment.NewLine,
+                    item.AmmortIndex, item.PaymentDate(), item.PrinciplePaidString(),
                     item.InterestPaidString(), item.TotalInterestString(), item.RemainingBalanceString());
-            }catch(NullReferenceException nre)
+            }
+            catch (NullReferenceException nre)
             {
                 Console.WriteLine("Ammortization item null while attempting to output.");
+            }
+        }
+
+        public void CreateDirectoryForOutputFile(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
             }
         }
     }

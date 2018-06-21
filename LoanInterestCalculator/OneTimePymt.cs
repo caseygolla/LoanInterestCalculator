@@ -8,17 +8,30 @@ namespace LoanInterestCalculator
 {
     class OneTimePymt : IPayment
     {
+        private double paymentAmount;
+        private DateTime dateOfPayment;
+
+        public OneTimePymt(double amount, DateTime date)
+        {
+            paymentAmount = amount;
+            dateOfPayment = date;
+        }
+
         public double PaymentAmount
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return paymentAmount; }
+            set { paymentAmount = value; }
+        }
 
-            set
-            {
-                throw new NotImplementedException();
-            }
+        public DateTime DateOfPayment
+        {
+            get { return dateOfPayment; }
+            set { dateOfPayment = value; }
+        }
+
+        public double calculateNewLoanPayment(Loan loan)
+        {
+            throw new NotImplementedException();
         }
     }
 }
