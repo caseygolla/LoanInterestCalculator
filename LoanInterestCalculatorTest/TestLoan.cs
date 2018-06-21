@@ -5,7 +5,7 @@ using LoanInterestCalculator;
 namespace LoanInterestCalculatorTest
 {
     [TestFixture]
-    public class LoanTest
+    public class TestLoan
     {
 
         [TestCase(1000, .06, 12, 5)]

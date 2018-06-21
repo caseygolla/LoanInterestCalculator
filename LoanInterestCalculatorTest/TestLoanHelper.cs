@@ -6,7 +6,7 @@ using System.Collections;
 namespace LoanInterestCalculatorTest
 {
     [TestFixture]
-    public class LoanHelperTest
+    public class TestLoanHelper
     {
         [TestCase(12312, "12,312.00")]
         [TestCase(98, "98.00")]
