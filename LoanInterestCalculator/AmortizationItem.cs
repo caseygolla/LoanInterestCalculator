@@ -30,8 +30,9 @@ namespace LoanInterestCalculator
 
         public void amortitizeThis(int paymentCycle)
         {
-            Console.WriteLine("Payment " + paymentCycle);
+            Console.WriteLine("Payment " + (paymentCycle + 1) );
             Console.WriteLine("\tPrinciple Paid: " + LoanHelper.FormatNumberToCurrency(principlePaid) + 
+                                " | Interest Paid: " + LoanHelper.FormatNumberToCurrency(interestPaid) +
                                 " | Total Interest: " + LoanHelper.FormatNumberToCurrency(totalInterest) +
                                 " | Amount Remaining: " + LoanHelper.FormatNumberToCurrency(remainingBalance));
 

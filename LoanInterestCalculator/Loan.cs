@@ -8,9 +8,6 @@ namespace LoanInterestCalculator
 {
     public class Loan
     {
-        private double principleAmount;
-        private double interestRate;
-        private double lengthOfRepaymentInYears;
         private int periodicPayments;
         private double totalInterest = 0;
         private const int compoundFrequency = 365;
@@ -19,24 +16,24 @@ namespace LoanInterestCalculator
 
         public Loan()
         {
-            principleAmount = 1000;
-            interestRate = .06;
-            lengthOfRepaymentInYears = .5;
+            PrincipleAmount = 1000;
+            InterestRate = .06;
+            LengthOfRepaymentInYears = .5;
             periodicPayments = 12;
-            amortizationList = new List<AmortizationItem>();
         }
 
         public Loan(double principle, double rate, double length = 1, int periodicPayments = 12)
         {
-            principleAmount = principle;
-            interestRate = rate;
-            lengthOfRepaymentInYears = length;
+            PrincipleAmount = principle;
+            InterestRate = rate;
+            LengthOfRepaymentInYears = length;
             this.periodicPayments = periodicPayments;
         }
 
-        public double PrincipleAmount { get { return principleAmount; } set { principleAmount = value; } }
-        public double InterestRate { get { return interestRate; } set { interestRate = value; } }
-        public double LengthOfRepaymentInYears { get { return lengthOfRepaymentInYears; } set { lengthOfRepaymentInYears = value; } }
+        public double PrincipleAmount { get; set; }
+        public double InterestRate { get; set; }
+        public double LengthOfRepaymentInYears { get; set; }
+        public DateTime StartDate { get; set; }
         public double TotalInterest {
             get { return totalInterest; }
             private set { totalInterest = value; }
@@ -49,22 +46,23 @@ namespace LoanInterestCalculator
 
         public double calcPaymentOfInterest()
         {
-            double interestPayment = principleAmount * interestRate / periodicPayments;
+            double interestPayment = PrincipleAmount * InterestRate / periodicPayments;
             return Math.Round(interestPayment,2);
         }
 
         public double calcTotalRepayment()
         {
-            double total = calcMonthlyPayment() * periodicPayments * lengthOfRepaymentInYears;
+            double total = calcMonthlyPayment() * periodicPayments * LengthOfRepaymentInYears;
             return Math.Round(total, 2);
         }
 
         public double calcMonthlyPayment()
         {
-            double i = interestRate / periodicPayments;
-            double n = lengthOfRepaymentInYears * periodicPayments;
-            double discountFactor = (Math.Pow((one + i), n) - one) / (i * Math.Pow(one + i, n));
-            double payment = principleAmount / discountFactor;
+            double i = InterestRate / periodicPayments;
+            double n = LengthOfRepaymentInYears * periodicPayments;
+            double discountFactor = (Math.Pow((one + i), n) - one) / 
+                                    (i * Math.Pow(one + i, n));
+            double payment = PrincipleAmount / discountFactor;
             return Math.Round(payment,2);
         }
 
@@ -90,23 +88,23 @@ namespace LoanInterestCalculator
             {
                 interest = calcPaymentOfInterest();
                 totalInterest += Math.Round(interest, 3);
-                if(payment >= principleAmount)
+                if(payment >= PrincipleAmount)
                 {
-                    principleAmount -= interest;
-                    principlePaid = principleAmount;
-                    principleAmount = 0;
-                    amortizationList.Add(new AmortizationItem(principlePaid, interest, totalInterest, principleAmount));
+                    PrincipleAmount -= interest;
+                    principlePaid = PrincipleAmount;
+                    PrincipleAmount = 0;
+                    amortizationList.Add(new AmortizationItem(principlePaid, interest, totalInterest, PrincipleAmount));
                     break;
                 }
                 principlePaid = (payment - interest);
-                principleAmount -= principlePaid;
-                if (principleAmount < 0)
-                    principleAmount = 0;
-                if (principleAmount < payment)
-                    payment = principleAmount;
-                amortizationList.Add(new AmortizationItem(principlePaid, interest, totalInterest, principleAmount));
+                PrincipleAmount -= principlePaid;
+                if (PrincipleAmount < 0)
+                    PrincipleAmount = 0;
+                if (PrincipleAmount < payment)
+                    payment = PrincipleAmount;
+                amortizationList.Add(new AmortizationItem(principlePaid, interest, totalInterest, PrincipleAmount));
             }
-            while (principleAmount > 0);
+            while (PrincipleAmount > 0);
         }
 
         public void printAmortization()
