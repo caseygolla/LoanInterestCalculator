@@ -12,9 +12,11 @@ namespace LoanInterestCalculator
         private double interestPaid;
         private double totalInterest;
         private double remainingBalance;
+        private DateTime paymentDate;
 
-        public AmortizationItem (double principle, double interest, double totalInterest, double balance)
+        public AmortizationItem (DateTime date, double principle, double interest, double totalInterest, double balance)
         {
+            paymentDate = date.Date;
             principlePaid = principle;
             interestPaid = interest;
             this.totalInterest = totalInterest;
@@ -30,7 +32,7 @@ namespace LoanInterestCalculator
 
         public void amortitizeThis(int paymentCycle)
         {
-            Console.WriteLine("Payment " + (paymentCycle + 1) );
+            Console.WriteLine("Payment " + paymentDate.ToString("MMMM, yyyy") );
             Console.WriteLine("\tPrinciple Paid: " + LoanHelper.FormatNumberToCurrency(principlePaid) + 
                                 " | Interest Paid: " + LoanHelper.FormatNumberToCurrency(interestPaid) +
                                 " | Total Interest: " + LoanHelper.FormatNumberToCurrency(totalInterest) +
