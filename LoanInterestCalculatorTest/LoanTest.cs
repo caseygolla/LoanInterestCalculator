@@ -79,5 +79,49 @@ namespace LoanInterestCalculatorTest
 
             Assert.That(calculatedTotalInterest, Is.EqualTo(expected).Within(.5));
         }
+
+        [TestCase(1000, .05, 1, 27.29)]
+        [Category("Test_AdditionalPayments")]
+        public void Test_AnyAdditionalPaymentsIsNull(double principle, double interestRate, double loanLengthInYears, double expected)
+        {
+            Loan loan = new Loan(principle, interestRate, loanLengthInYears);
+
+            Assert.IsEmpty(loan.AddPayments);
+
+        }
+
+        [TestCase(1000, .05, 1, 27.29)]
+        [Category("Test_AdditionalPayments")]
+        public void Test_AnyAdditionalPaymentsIsNotNull(double principle, double interestRate, double loanLengthInYears, double expected)
+        {
+            Loan loan = new Loan(principle, interestRate, loanLengthInYears);
+            loan.AddPayments = new System.Collections.Generic.List<AdditionalPayment>();
+
+            OneTimePayment oneTimePayment = new OneTimePayment();
+            loan.AddPayments.Add(oneTimePayment);
+
+            Assert.IsNotNull(loan.AddPayments);
+
+        }
+
+        [TestCase(1000, .05, 1, 2, 800, 8.15)]
+        [TestCase(13412, .08, 7, 12, 723.27, 3721.41)]
+        [TestCase(193748, .075, 15, 120, 8000, 126112.40)]
+        [Category("Test_AdditionalPayments")]
+        public void Test_OneTimePaymentHasCorrectInterestTotal(double principle, double interestRate, double loanLengthInYears, int months, double payment, double expected)
+        {
+            Loan loan = new Loan(principle, interestRate, loanLengthInYears);
+
+            loan.AddPayments = new System.Collections.Generic.List<AdditionalPayment>();
+
+            OneTimePayment oneTimePayment = 
+                    new OneTimePayment(DateTime.Now.AddMonths(months), payment);
+            loan.AddPayments.Add(oneTimePayment);
+
+            loan.calculateAmmoritazation();
+            double calculatedTotalInterest = loan.TotalInterest;
+            loan.printAmortization();
+            Assert.That(calculatedTotalInterest, Is.EqualTo(expected).Within(.5));
+        }
     }
 }
