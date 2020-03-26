@@ -32,8 +32,8 @@ namespace LoanInterestCalculatorTest
         public void Test_TotalRepaymentCalculation(double principle, double interestRate, double loanLength, double expected)
         {
             Loan newLoan = new Loan(principle, interestRate, loanLength);
-
-            double totalRepayment = newLoan.calcTotalRepayment();
+            newLoan.calcBasicLoan();
+            double totalRepayment = newLoan.TotalRepayment;
 
             Assert.That(totalRepayment, Is.EqualTo(expected));
         }
@@ -46,9 +46,10 @@ namespace LoanInterestCalculatorTest
         [Category("Test_MonthlyPayment")]
         public void Test_MonthlyPaymentCalculation(double principle, double interestRate, double loanLengthInYears, double expected)
         {
-            Loan loan = new Loan(principle,interestRate, loanLengthInYears);
-
-            double actual = loan.calcMonthlyPayment();
+            Loan loan = new Loan(principle, interestRate, loanLengthInYears);
+            
+            loan.calcMonthlyPayment();
+            double actual = loan.MonthlyPayment;
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -86,7 +87,7 @@ namespace LoanInterestCalculatorTest
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
 
-            Assert.IsEmpty(loan.AddPayments);
+            Assert.IsEmpty(loan.AdditionalPayments);
 
         }
 
@@ -95,12 +96,12 @@ namespace LoanInterestCalculatorTest
         public void Test_AnyAdditionalPaymentsIsNotNull(double principle, double interestRate, double loanLengthInYears, double expected)
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
-            loan.AddPayments = new System.Collections.Generic.List<AdditionalPayment>();
+            loan.AdditionalPayments = new System.Collections.Generic.List<AdditionalPayment>();
 
             OneTimePayment oneTimePayment = new OneTimePayment();
-            loan.AddPayments.Add(oneTimePayment);
+            loan.AdditionalPayments.Add(oneTimePayment);
 
-            Assert.IsNotNull(loan.AddPayments);
+            Assert.IsNotNull(loan.AdditionalPayments);
 
         }
 
@@ -112,15 +113,13 @@ namespace LoanInterestCalculatorTest
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
 
-            loan.AddPayments = new System.Collections.Generic.List<AdditionalPayment>();
+            loan.AdditionalPayments = new System.Collections.Generic.List<AdditionalPayment>();
 
-            OneTimePayment oneTimePayment = 
-                    new OneTimePayment(DateTime.Now.AddMonths(months), payment);
-            loan.AddPayments.Add(oneTimePayment);
+            OneTimePayment oneTimePayment = new OneTimePayment(DateTime.Now.AddMonths(months), payment);
+            loan.AdditionalPayments.Add(oneTimePayment);
 
             loan.calculateAmmoritazation();
             double calculatedTotalInterest = loan.TotalInterest;
-            loan.printAmortization();
             Assert.That(calculatedTotalInterest, Is.EqualTo(expected).Within(.5));
         }
     }

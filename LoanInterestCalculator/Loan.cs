@@ -38,6 +38,9 @@ namespace LoanInterestCalculator
         public double InterestRate { get; set; }
         public double LengthOfRepaymentInYears { get; set; }
         public double InterestSaved { get; set; }
+        public double MonthlyPayment { get; set; }
+        public double TotalRepayment { get; set; }
+
         public DateTime StartDate
         {
             get
@@ -49,7 +52,8 @@ namespace LoanInterestCalculator
             set { startDate = value; }
         }
 
-        public double TotalInterest {
+        public double TotalInterest
+        {
             get { return totalInterest; }
             private set { totalInterest = value; }
         }
@@ -59,7 +63,7 @@ namespace LoanInterestCalculator
             set { amortizationList = value; }
         }
 
-        public List<AdditionalPayment> AddPayments
+        public List<AdditionalPayment> AdditionalPayments
         {
             get { return addPayments; }
             set { addPayments = value; }
@@ -70,84 +74,91 @@ namespace LoanInterestCalculator
         public double calcPaymentOfInterest()
         {
             double interestPayment = PrincipleAmount * InterestRate / periodicPayments;
-            return Math.Round(interestPayment,2);
+            return Math.Round(interestPayment, 2);
         }
 
-        public double calcTotalRepayment()
+        public void calcTotalRepayment()
         {
-            double total = calcMonthlyPayment() * periodicPayments * LengthOfRepaymentInYears;
-            return Math.Round(total, 2);
+            double total = MonthlyPayment * periodicPayments * LengthOfRepaymentInYears;
+            TotalRepayment = Math.Round(total, 2);
         }
 
-        public double calcMonthlyPayment()
+        public void calcMonthlyPayment()
         {
             double i = InterestRate / periodicPayments;
             double n = LengthOfRepaymentInYears * periodicPayments;
-            double discountFactor = (Math.Pow((one + i), n) - one) / 
+            double discountFactor = (Math.Pow((one + i), n) - one) /
                                     (i * Math.Pow(one + i, n));
             double payment = PrincipleAmount / discountFactor;
-            return Math.Round(payment,2);
+
+            MonthlyPayment = Math.Round(payment, 2);
+        }
+
+        public void calcBasicLoan()
+        {
+            calcMonthlyPayment();
+            calcTotalRepayment();
         }
 
         public string displayMonthlyPayment()
         {
-            return LoanHelper.FormatNumberToCurrency(calcMonthlyPayment());
+            return LoanHelper.FormatNumberToCurrency(MonthlyPayment);
         }
 
         public string displayTotalRepayment()
         {
-            return LoanHelper.FormatNumberToCurrency(calcTotalRepayment());
+            return LoanHelper.FormatNumberToCurrency(TotalRepayment);
         }
 
         /// <summary>
         ///Essentially checks inputs to see if there is any additional payments. 
-        ///If so, it adds them to the List<AdditionalPayment> addPayments.
+        ///If so, it adds them to the List<AdditionalPayment> AdditionalPayments.
         /// </summary>
-        public void AnyAdditionalPayments(out DateTime oneTimePayDate, out double oneTimePayAmount)
+        public void AnyAdditionalPayments(out DateTime oneTimePayDate, out double oneTimePayAmount, ref double payment)
         {
             //Check inputs for none null/default values. 
             //That is what would happen to populate the values.
-            AddPayments.Add(new OneTimePayment(DateTime.Now.AddMonths(12), 723.27));
 
             oneTimePayDate = DateTime.MinValue;
             oneTimePayAmount = 0;
 
-            if (AddPayments.OfType<OneTimePayment>().Any())
+            if (AdditionalPayments.OfType<OneTimePayment>().Any())
             {
-                oneTimePayDate = Convert.ToDateTime(AddPayments.OfType<OneTimePayment>().
+                oneTimePayDate = Convert.ToDateTime(AdditionalPayments.OfType<OneTimePayment>().
                                             First().DatePayment.ToShortDateString());
-                oneTimePayAmount = AddPayments.OfType<OneTimePayment>().
+                oneTimePayAmount = AdditionalPayments.OfType<OneTimePayment>().
                                         First().AmountPayment;
             }
-            //Code Ready for monthly payments.
-            else if (AddPayments.OfType<MonthlyPayments>().Any())
+            if (AdditionalPayments.OfType<MonthlyPayments>().Any())
             {
-
+                payment += AdditionalPayments.OfType<MonthlyPayments>().First<MonthlyPayments>().Amount;
             }
         }
 
         public void calculateAmmoritazation()
         {
             double interest;
-            double totalAmount;
-            double payment;
-            DateTime paymentDate;
             DateTime oneTimePayDate;
             double oneTimePayAmount;
-            double principlePaid = 0;
+            DateTime paymentDate;
             amortizationList = new List<AmortizationItem>();
+            double principlePaid = 0;
+            double totalAmount;
+            double payment;
 
-            totalAmount = calcTotalRepayment();
-            payment = calcMonthlyPayment();
+            calcBasicLoan();
 
-            AnyAdditionalPayments(out oneTimePayDate, out oneTimePayAmount);
+            totalAmount = TotalRepayment;
+            payment = MonthlyPayment;
+
+            AnyAdditionalPayments(out oneTimePayDate, out oneTimePayAmount, ref payment);
 
             do
             {
-                paymentDate = StartDate.AddMonths(amortizationList.Count).Date;  
+                paymentDate = StartDate.AddMonths(amortizationList.Count).Date;
                 interest = calcPaymentOfInterest();
                 totalInterest += Math.Round(interest, 3);
-                if(payment >= PrincipleAmount)
+                if (payment >= PrincipleAmount)
                 {
                     principlePaid = PrincipleAmount;
                     PrincipleAmount = 0;
@@ -175,7 +186,7 @@ namespace LoanInterestCalculator
 
         public void printAmortization()
         {
-            foreach(AmortizationItem item in amortizationList)
+            foreach (AmortizationItem item in amortizationList)
             {
                 item.amortitizeThis(amortizationList.IndexOf(item));
             }

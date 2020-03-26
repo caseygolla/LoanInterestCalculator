@@ -8,9 +8,12 @@ namespace LoanInterestCalculator
 {
     public class MonthlyPayments : AdditionalPayment
     {
-        public MonthlyPayments()
+        public MonthlyPayments(double amount)
         {
-
+            Amount = amount;
         }
+
+        public double Amount { get; set; }
+
     }
 }
