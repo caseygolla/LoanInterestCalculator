@@ -14,10 +14,12 @@ namespace LoanInterestCalculator
         private const int compoundFrequency = 365;
         private const int one = 1;
         DateTime startDate;
+        List<AdditionalPayment> addPayments = new List<AdditionalPayment>();
 
         public Loan()
         {
-            PrincipleAmount = 1000;
+            InitialPrinciple = 1000;
+            PrincipleAmount = InitialPrinciple;
             InterestRate = .06;
             LengthOfRepaymentInYears = .5;
             periodicPayments = 12;
@@ -25,25 +27,28 @@ namespace LoanInterestCalculator
 
         public Loan(double principle, double rate, double length = 1, int periodicPayments = 12)
         {
-            PrincipleAmount = principle;
+            InitialPrinciple = principle;
+            PrincipleAmount = InitialPrinciple;
             InterestRate = rate;
             LengthOfRepaymentInYears = length;
             this.periodicPayments = periodicPayments;
         }
-
+        public double InitialPrinciple { get; set; }
         public double PrincipleAmount { get; set; }
         public double InterestRate { get; set; }
         public double LengthOfRepaymentInYears { get; set; }
+        public double InterestSaved { get; set; }
         public DateTime StartDate
         {
             get
             {
                 if (startDate == DateTime.MinValue || startDate == null)
-                    startDate = DateTime.Today.Date;
+                    startDate = DateTime.Today.Date.AddMonths(1);
                 return startDate;
             }
             set { startDate = value; }
         }
+
         public double TotalInterest {
             get { return totalInterest; }
             private set { totalInterest = value; }
@@ -53,6 +58,14 @@ namespace LoanInterestCalculator
             get { return amortizationList; }
             set { amortizationList = value; }
         }
+
+        public List<AdditionalPayment> AddPayments
+        {
+            get { return addPayments; }
+            set { addPayments = value; }
+        }
+
+        public double MoneySaved { get; set; }
 
         public double calcPaymentOfInterest()
         {
@@ -86,29 +99,68 @@ namespace LoanInterestCalculator
             return LoanHelper.FormatNumberToCurrency(calcTotalRepayment());
         }
 
+        /// <summary>
+        ///Essentially checks inputs to see if there is any additional payments. 
+        ///If so, it adds them to the List<AdditionalPayment> addPayments.
+        /// </summary>
+        public void AnyAdditionalPayments(out DateTime oneTimePayDate, out double oneTimePayAmount)
+        {
+            //Check inputs for none null/default values. 
+            //That is what would happen to populate the values.
+            AddPayments.Add(new OneTimePayment(DateTime.Now.AddMonths(12), 723.27));
+
+            oneTimePayDate = DateTime.MinValue;
+            oneTimePayAmount = 0;
+
+            if (AddPayments.OfType<OneTimePayment>().Any())
+            {
+                oneTimePayDate = Convert.ToDateTime(AddPayments.OfType<OneTimePayment>().
+                                            First().DatePayment.ToShortDateString());
+                oneTimePayAmount = AddPayments.OfType<OneTimePayment>().
+                                        First().AmountPayment;
+            }
+            //Code Ready for monthly payments.
+            else if (AddPayments.OfType<MonthlyPayments>().Any())
+            {
+
+            }
+        }
+
         public void calculateAmmoritazation()
         {
             double interest;
-            amortizationList = new List<AmortizationItem>();
-            double principlePaid = 0;
-            double amount = calcTotalRepayment();
-            double payment = calcMonthlyPayment();
+            double totalAmount;
+            double payment;
             DateTime paymentDate;
+            DateTime oneTimePayDate;
+            double oneTimePayAmount;
+            double principlePaid = 0;
+            amortizationList = new List<AmortizationItem>();
+
+            totalAmount = calcTotalRepayment();
+            payment = calcMonthlyPayment();
+
+            AnyAdditionalPayments(out oneTimePayDate, out oneTimePayAmount);
 
             do
             {
-                paymentDate = StartDate.AddMonths(amortizationList.Count).Date;
+                paymentDate = StartDate.AddMonths(amortizationList.Count).Date;  
                 interest = calcPaymentOfInterest();
                 totalInterest += Math.Round(interest, 3);
                 if(payment >= PrincipleAmount)
                 {
-                    PrincipleAmount -= interest;
                     principlePaid = PrincipleAmount;
                     PrincipleAmount = 0;
                     amortizationList.Add(new AmortizationItem(paymentDate, principlePaid, interest, totalInterest, PrincipleAmount));
                     break;
                 }
                 principlePaid = (payment - interest);
+                if (paymentDate.ToString("MMMM, yyyy") == oneTimePayDate.ToString("MMMM, yyyy"))
+                {
+                    principlePaid += oneTimePayAmount;
+                    if (principlePaid >= PrincipleAmount)
+                        principlePaid = PrincipleAmount;
+                }
                 PrincipleAmount -= principlePaid;
                 if (PrincipleAmount < 0)
                     PrincipleAmount = 0;
@@ -117,6 +169,8 @@ namespace LoanInterestCalculator
                 amortizationList.Add(new AmortizationItem(paymentDate, principlePaid, interest, totalInterest, PrincipleAmount));
             }
             while (PrincipleAmount > 0);
+
+            MoneySaved = totalAmount - InitialPrinciple - totalInterest;
         }
 
         public void printAmortization()
