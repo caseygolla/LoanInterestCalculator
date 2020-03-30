@@ -18,7 +18,7 @@ namespace LoanInterestCalculatorTest
         {
             Loan newLoan = new Loan(principle, interestRate, 1, periodicPayments);
 
-            double interestPayment = newLoan.calcPaymentOfInterest();
+            double interestPayment = newLoan.CalcPaymentOfInterest();
 
             Assert.That(interestPayment, Is.EqualTo(expected));
 
@@ -32,7 +32,7 @@ namespace LoanInterestCalculatorTest
         public void Test_TotalRepaymentCalculation(double principle, double interestRate, double loanLength, double expected)
         {
             Loan newLoan = new Loan(principle, interestRate, loanLength);
-            newLoan.calcBasicLoan();
+            newLoan.CalcBasicLoan();
             double totalRepayment = newLoan.TotalRepayment;
 
             Assert.That(totalRepayment, Is.EqualTo(expected));
@@ -48,7 +48,7 @@ namespace LoanInterestCalculatorTest
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
             
-            loan.calcMonthlyPayment();
+            loan.CalcMonthlyPayment();
             double actual = loan.MonthlyPayment;
 
             Assert.That(actual, Is.EqualTo(expected));
@@ -62,7 +62,7 @@ namespace LoanInterestCalculatorTest
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
 
-            loan.calculateAmmoritazation();
+            loan.CalculateAmmoritazation();
 
             Assert.That(loan.AmortizationList.Count, Is.EqualTo(expected));
         }
@@ -75,7 +75,7 @@ namespace LoanInterestCalculatorTest
         {
             Loan loan = new Loan(principle, interestRate, loanLengthInYears);
 
-            loan.calculateAmmoritazation();
+            loan.CalculateAmmoritazation();
             double calculatedTotalInterest = loan.TotalInterest;
 
             Assert.That(calculatedTotalInterest, Is.EqualTo(expected).Within(.5));
@@ -118,7 +118,7 @@ namespace LoanInterestCalculatorTest
             OneTimePayment oneTimePayment = new OneTimePayment(DateTime.Now.AddMonths(months), payment);
             loan.AdditionalPayments.Add(oneTimePayment);
 
-            loan.calculateAmmoritazation();
+            loan.CalculateAmmoritazation();
             double calculatedTotalInterest = loan.TotalInterest;
             Assert.That(calculatedTotalInterest, Is.EqualTo(expected).Within(.5));
         }

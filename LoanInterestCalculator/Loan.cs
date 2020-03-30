@@ -71,19 +71,19 @@ namespace LoanInterestCalculator
 
         public double MoneySaved { get; set; }
 
-        public double calcPaymentOfInterest()
+        public double CalcPaymentOfInterest()
         {
             double interestPayment = PrincipleAmount * InterestRate / periodicPayments;
             return Math.Round(interestPayment, 2);
         }
 
-        public void calcTotalRepayment()
+        public void CalcTotalRepayment()
         {
             double total = MonthlyPayment * periodicPayments * LengthOfRepaymentInYears;
             TotalRepayment = Math.Round(total, 2);
         }
 
-        public void calcMonthlyPayment()
+        public void CalcMonthlyPayment()
         {
             double i = InterestRate / periodicPayments;
             double n = LengthOfRepaymentInYears * periodicPayments;
@@ -94,18 +94,18 @@ namespace LoanInterestCalculator
             MonthlyPayment = Math.Round(payment, 2);
         }
 
-        public void calcBasicLoan()
+        public void CalcBasicLoan()
         {
-            calcMonthlyPayment();
-            calcTotalRepayment();
+            CalcMonthlyPayment();
+            CalcTotalRepayment();
         }
 
-        public string displayMonthlyPayment()
+        public string DisplayMonthlyPayment()
         {
             return LoanHelper.FormatNumberToCurrency(MonthlyPayment);
         }
 
-        public string displayTotalRepayment()
+        public string DisplayTotalRepayment()
         {
             return LoanHelper.FormatNumberToCurrency(TotalRepayment);
         }
@@ -135,7 +135,7 @@ namespace LoanInterestCalculator
             }
         }
 
-        public void calculateAmmoritazation()
+        public void CalculateAmmoritazation()
         {
             double interest;
             DateTime oneTimePayDate;
@@ -146,7 +146,7 @@ namespace LoanInterestCalculator
             double totalAmount;
             double payment;
 
-            calcBasicLoan();
+            CalcBasicLoan();
 
             totalAmount = TotalRepayment;
             payment = MonthlyPayment;
@@ -156,7 +156,7 @@ namespace LoanInterestCalculator
             do
             {
                 paymentDate = StartDate.AddMonths(amortizationList.Count).Date;
-                interest = calcPaymentOfInterest();
+                interest = CalcPaymentOfInterest();
                 totalInterest += Math.Round(interest, 3);
                 if (payment >= PrincipleAmount)
                 {
@@ -184,11 +184,11 @@ namespace LoanInterestCalculator
             MoneySaved = totalAmount - InitialPrinciple - totalInterest;
         }
 
-        public void printAmortization()
+        public void PrintAmortization()
         {
             foreach (AmortizationItem item in amortizationList)
             {
-                item.amortitizeThis(amortizationList.IndexOf(item));
+                item.AmmortitizeThis(amortizationList.IndexOf(item));
             }
         }
     }

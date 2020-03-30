@@ -34,7 +34,7 @@ namespace LoanInterestCalculator
 
         public double Payment { get; set; }
 
-        public void amortitizeThis(int paymentCycle)
+        public void AmmortitizeThis(int paymentCycle)
         {
             Console.WriteLine("Payment " + paymentDate.ToString("MMMM, yyyy") );
             Console.WriteLine("\tTotal Paid: " + LoanHelper.FormatNumberToCurrency(payment) +
