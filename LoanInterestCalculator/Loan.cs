@@ -181,7 +181,8 @@ namespace LoanInterestCalculator
             }
             while (PrincipleAmount > 0);
 
-            MoneySaved = totalAmount - InitialPrinciple - totalInterest;
+            double savedAmount = totalAmount - InitialPrinciple - totalInterest;
+            MoneySaved = Math.Round(savedAmount, 2);
         }
 
         public void PrintAmortization()
