@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Loans.cs" />
     <Compile Include="MonthlyPayments.cs" />
     <Compile Include="OneTimePayment.cs" />
     <Compile Include="AmortizationItem.cs" />
