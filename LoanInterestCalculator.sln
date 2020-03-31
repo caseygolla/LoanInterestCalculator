@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanInterestCalculatorTest", "LoanInterestCalculatorTest\LoanInterestCalculatorTest.csproj", "{C50AE207-49C9-4B5E-A790-0897BC68C82C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorFrontEnd", "CalculatorFrontEnd\CalculatorFrontEnd.csproj", "{FEF84EF6-D678-488D-AD98-F1FD7B0D5D18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "WebApplication\WebApplication.csproj", "{D8A98631-2E38-4A53-8CBF-5671DC948846}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{C50AE207-49C9-4B5E-A790-0897BC68C82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C50AE207-49C9-4B5E-A790-0897BC68C82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C50AE207-49C9-4B5E-A790-0897BC68C82C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEF84EF6-D678-488D-AD98-F1FD7B0D5D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEF84EF6-D678-488D-AD98-F1FD7B0D5D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEF84EF6-D678-488D-AD98-F1FD7B0D5D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEF84EF6-D678-488D-AD98-F1FD7B0D5D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A98631-2E38-4A53-8CBF-5671DC948846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A98631-2E38-4A53-8CBF-5671DC948846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A98631-2E38-4A53-8CBF-5671DC948846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A98631-2E38-4A53-8CBF-5671DC948846}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
