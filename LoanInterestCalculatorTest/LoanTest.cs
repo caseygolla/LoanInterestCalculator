@@ -122,5 +122,16 @@ namespace LoanInterestCalculatorTest
             double calculatedTotalInterest = loan.TotalInterest;
             Assert.That(calculatedTotalInterest, Is.EqualTo(expected).Within(.5));
         }
+
+        [TestCase(150000, .06, 30, 37037.86)]
+        [Category("Test_BiWeeklyPayments")]
+        public void Test_BiWeeklyPaymentCalculationForLoan(double principle, double interestRate, double loanLength, double expected)
+        {
+            Loan newLoan = new Loan(principle, interestRate, loanLength, 26);
+            newLoan.CalculateAmmoritazation();
+            double totalinterest = newLoan.MoneySaved;
+
+            Assert.That(totalinterest, Is.EqualTo(expected));
+        }
     }
 }

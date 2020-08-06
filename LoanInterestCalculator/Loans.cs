@@ -67,10 +67,26 @@ namespace LoanInterestCalculator
             foreach (Loan loan in loans)
             {
                 DateTime endDate = loan.StartDate;
-                endDate = endDate.AddMonths(loan.AmortizationList.Count);
+                if (loan.BiWeeklyPayment != 0)
+                {
+                    int totalYears = (loan.AmortizationList.Count / 26);
 
-                details.Add(new LoanDetails(loan.MonthlyPayment, loan.TotalRepayment,
-                    loan.MoneySaved, loan.TotalInterest, endDate));
+                    int remainingMonths = Convert.ToInt32(
+                    //double x = 
+                    Math.Round(((loan.AmortizationList.Count / 26f) - totalYears) * 12));
+
+                    endDate = endDate.AddYears(totalYears);
+                    endDate = endDate.AddMonths(remainingMonths);
+                    double actualRepaid = Math.Round(loan.InitialPrinciple + loan.TotalInterest);
+                    details.Add(new LoanDetails(loan.BiWeeklyPayment, loan.TotalRepayment,
+                        loan.MoneySaved, loan.TotalInterest, endDate, actualRepaid));
+                }
+                else
+                {
+                    endDate = endDate.AddMonths(loan.AmortizationList.Count);
+                    details.Add(new LoanDetails(loan.MonthlyPayment, loan.TotalRepayment,
+                        loan.MoneySaved, loan.TotalInterest, endDate));
+                }
             }
         }
 
@@ -82,16 +98,16 @@ namespace LoanInterestCalculator
             }
             foreach (LoanDetails detail in details)
             {
-                if(detail.MoneySaved < .5)
+                if (detail.MoneySaved < .5)
                 {
-                    Console.WriteLine("Payoff Date: {0} -- Monthly Payment: {1} -- Total Repayment: {2} " +
+                    Console.WriteLine("Payoff Date: {0} -- Monthly Payment: {1} -- Standard Repayment: {2} " +
                                 "-- Total Interest {3}",
-                    detail.PayoffDate.ToString("MMMM, yyyy"), detail.MonthlyPayment, detail.TotalRepayment, detail.TotalInterest);
+                    detail.PayoffDate.ToString("MMMM, yyyy"), detail.MonthlyPayment, detail.ExpectedRepayment, detail.TotalInterest);
                 }
                 else
-                Console.WriteLine("Payoff Date: {0} -- Monthly Payment: {1} -- Total Repayment: {2} " +
-                                "-- Total Interest {3} -- Money Saved: {4}",
-                    detail.PayoffDate.ToString("MMMM, yyyy"), detail.MonthlyPayment, detail.TotalRepayment, detail.TotalInterest, detail.MoneySaved);
+                    Console.WriteLine("\nPayoff Date: {0} -- Bi-Weekly Payment: {1} -- Standard Repayment: {2} \n" +
+                                    "\tActual Repayment: {5} -- Total Interest Paid: {3} -- Interest Saved: {4}",
+                        detail.PayoffDate.ToString("MMMM, yyyy"), detail.MonthlyPayment, detail.ExpectedRepayment, detail.TotalInterest, detail.MoneySaved, detail.ActualRepayment);
             }
         }
 

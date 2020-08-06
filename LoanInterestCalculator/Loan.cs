@@ -12,7 +12,8 @@ namespace LoanInterestCalculator
         private List<AmortizationItem> amortizationList;
         private double totalInterest = 0;
         private const int compoundFrequency = 365;
-        private const int one = 1;
+        private const int ONE = 1;
+        private const int TWNETYSIX = 26;
         DateTime startDate;
         List<AdditionalPayment> addPayments = new List<AdditionalPayment>();
 
@@ -39,6 +40,7 @@ namespace LoanInterestCalculator
         public double LengthOfRepaymentInYears { get; set; }
         public double InterestSaved { get; set; }
         public double MonthlyPayment { get; set; }
+        public double BiWeeklyPayment { get; set; }
         public double TotalRepayment { get; set; }
 
         public DateTime StartDate
@@ -79,25 +81,43 @@ namespace LoanInterestCalculator
 
         public void CalcTotalRepayment()
         {
-            double total = MonthlyPayment * periodicPayments * LengthOfRepaymentInYears;
+            double total = MonthlyPayment * 12 * LengthOfRepaymentInYears;
             TotalRepayment = Math.Round(total, 2);
         }
 
         public void CalcMonthlyPayment()
         {
-            double i = InterestRate / periodicPayments;
-            double n = LengthOfRepaymentInYears * periodicPayments;
-            double discountFactor = (Math.Pow((one + i), n) - one) /
-                                    (i * Math.Pow(one + i, n));
+            MonthlyPayment = CalcPayment(12);
+        }
+
+        public void CalcBiWeeklyPayment()
+        {
+            double payment = CalcPayment(TWNETYSIX);
+
+            payment *= (ONE + (ONE / 12f));
+
+            BiWeeklyPayment = Math.Round(payment, 2);
+        }
+
+        public double CalcPayment(int numberOfPayments)
+        {
+            double i = InterestRate / numberOfPayments;
+            double n = LengthOfRepaymentInYears * numberOfPayments;
+            double z = Math.Pow((ONE + i), n);
+            double discountFactor = (z - ONE) / (i * z);
             double payment = PrincipleAmount / discountFactor;
 
-            MonthlyPayment = Math.Round(payment, 2);
+            return Math.Round(payment, 2);
         }
 
         public void CalcBasicLoan()
         {
             CalcMonthlyPayment();
             CalcTotalRepayment();
+            if (periodicPayments == TWNETYSIX)
+            {
+                CalcBiWeeklyPayment();
+            }
         }
 
         public string DisplayMonthlyPayment()
@@ -150,12 +170,16 @@ namespace LoanInterestCalculator
             CalcBasicLoan();
 
             totalAmount = TotalRepayment;
-            payment = MonthlyPayment;
+
+            if (periodicPayments == TWNETYSIX)
+                payment = BiWeeklyPayment;
+            else
+                payment = MonthlyPayment;
 
 
             AnyAdditionalPayments(out oneTimePayDate, out oneTimePayAmount, ref payment);
 
-            if(oneTimePayDate.ToString() != DateTime.MinValue.ToString())
+            if (oneTimePayDate.ToString() != DateTime.MinValue.ToString())
             {
                 oneTimePayFlag = true;
             }
@@ -172,8 +196,8 @@ namespace LoanInterestCalculator
                     amortizationList.Add(new AmortizationItem(paymentDate, principlePaid, interest, totalInterest, PrincipleAmount));
                     break;
                 }
-                principlePaid = (payment - interest);
-                if (oneTimePayFlag == true)
+                principlePaid = Math.Round(payment - interest, 2);
+                if (oneTimePayFlag == true && paymentDate.ToString("MMMM, yyyy") == oneTimePayDate.ToString("MMMM, yyyy"))
                 {
                     principlePaid += oneTimePayAmount;
                     if (principlePaid >= PrincipleAmount)
@@ -188,16 +212,41 @@ namespace LoanInterestCalculator
             }
             while (PrincipleAmount > 0);
 
-            double savedAmount = totalAmount - InitialPrinciple - totalInterest;
-            MoneySaved = Math.Round(savedAmount, 2);
+            InterestSaved = totalAmount - InitialPrinciple - totalInterest;
+            MoneySaved = Math.Round(InterestSaved, 2);
         }
 
         public void PrintAmortization()
         {
-            foreach (AmortizationItem item in amortizationList)
+            if (periodicPayments == TWNETYSIX)
             {
-                item.AmmortitizeThis(amortizationList.IndexOf(item));
+                double principlePaid = 0;
+                double yearlyInterest = 0;
+                double remainingBalance = 0;
+                int biweek;
+                for (int i = 0; i < amortizationList.Count; i++)
+                {
+                    biweek = i + 1; 
+                    principlePaid += amortizationList.ElementAt(i).PrinciplePaid;
+                    yearlyInterest += amortizationList.ElementAt(i).InterestPaid;
+                    remainingBalance = amortizationList.ElementAt(i).RemainingBalance;
+                    if (biweek % 26 == 0 || remainingBalance == 0)
+                    {
+                        int year = (i + 1) / 26;
+                        Console.WriteLine("Year " + year +
+                                            " | PrinciplePaid " + principlePaid +
+                                            " | Interest Paid " + yearlyInterest +
+                                            " | Remaining Balance " + remainingBalance);
+                        principlePaid = 0;
+                        yearlyInterest = 0;
+                    }
+                }
             }
+            else
+                foreach (AmortizationItem item in amortizationList)
+                {
+                    item.AmmortitizeThis(amortizationList.IndexOf(item));
+                }
         }
     }
 }
