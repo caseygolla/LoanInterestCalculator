@@ -145,13 +145,20 @@ namespace LoanInterestCalculator
             double principlePaid = 0;
             double totalAmount;
             double payment;
+            bool oneTimePayFlag = false;
 
             CalcBasicLoan();
 
             totalAmount = TotalRepayment;
             payment = MonthlyPayment;
 
+
             AnyAdditionalPayments(out oneTimePayDate, out oneTimePayAmount, ref payment);
+
+            if(oneTimePayDate.ToString() != DateTime.MinValue.ToString())
+            {
+                oneTimePayFlag = true;
+            }
 
             do
             {
@@ -166,7 +173,7 @@ namespace LoanInterestCalculator
                     break;
                 }
                 principlePaid = (payment - interest);
-                if (paymentDate.ToString("MMMM, yyyy") == oneTimePayDate.ToString("MMMM, yyyy"))
+                if (oneTimePayFlag == true)
                 {
                     principlePaid += oneTimePayAmount;
                     if (principlePaid >= PrincipleAmount)
